@@ -1,9 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "cd zam_trans_app && flutter build web --release",
-  "outputDirectory": "zam_trans_app/build/web",
-  "installCommand": "cd zam_trans_app && flutter pub get",
-  "framework": null,
   "headers": [
     {
       "source": "/(.*)",
@@ -17,6 +13,12 @@
           "value": "same-origin"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
     }
   ]
 }
