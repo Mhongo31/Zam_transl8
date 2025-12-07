@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 import '../models/subscription.dart';
@@ -15,7 +16,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> initialize() async {
     _isLoading = true;
-    notifyListeners();
+    // Don't notify during initialization - nothing is listening yet
 
     final prefs = await SharedPreferences.getInstance();
     final userData = prefs.getString('user_data');
@@ -35,12 +36,15 @@ class AuthProvider with ChangeNotifier {
     }
 
     _isLoading = false;
-    notifyListeners();
+    // No need to notify - splash screen doesn't listen, and we navigate away after init
   }
 
   Future<bool> signIn(String email, String password) async {
     _isLoading = true;
-    notifyListeners();
+    // Notify after the current frame is built
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
 
     // Simulate API call
     await Future.delayed(const Duration(seconds: 2));

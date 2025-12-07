@@ -45,6 +45,10 @@ model = None
 tokenizer = None
 device = "cpu"
 
+# Simple in-memory cache for translations (max 100 entries)
+translation_cache = {}
+MAX_CACHE_SIZE = 100
+
 class TranslationRequest(BaseModel):
     text: str
     direction: str  # "en_to_lu" or "lu_to_en"
@@ -60,21 +64,21 @@ class HealthResponse(BaseModel):
     device: str
 
 def load_model():
-    """Load the model with memory optimization"""
+    """Load the fine-tuned model from checkpoint"""
     global model, tokenizer, device
     
     try:
-        logger.info("Loading lightweight BART model...")
+        logger.info("Loading fine-tuned BART model from checkpoint...")
         
-        # Use your trained model from Hugging Face
-        model_name = "mhongob/lunda-english-bart-translator"
+        # Load from local checkpoint
+        checkpoint_path = "checkpoints/bart_fine_tuned/checkpoint-22500"
         
-        # Load tokenizer from Hugging Face
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        # Load tokenizer
+        tokenizer = AutoTokenizer.from_pretrained(checkpoint_path)
         
-        # Load model from Hugging Face
+        # Load model with memory optimization
         model = AutoModelForSeq2SeqLM.from_pretrained(
-            model_name,
+            checkpoint_path,
             torch_dtype=torch.float16,  # Use half precision to save memory
             low_cpu_mem_usage=True
         )
@@ -83,7 +87,7 @@ def load_model():
         model.to(device)
         model.eval()
         
-        logger.info("Lightweight BART model loaded successfully!")
+        logger.info("Fine-tuned BART model loaded successfully!")
         return True
         
     except Exception as e:
@@ -96,6 +100,19 @@ async def startup_event():
     success = load_model()
     if not success:
         logger.error("Failed to load model on startup")
+
+@app.get("/")
+async def root():
+    """Root endpoint"""
+    return {
+        "message": "Zam Transl8 API",
+        "version": "1.0.0",
+        "endpoints": {
+            "health": "/health",
+            "translate": "/translate (POST)",
+            "history": "/history"
+        }
+    }
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
@@ -115,69 +132,59 @@ async def translate_text(request: TranslationRequest):
     start_time = time.time()
     
     try:
-        # For now, return a simple translation mapping
-        # This is a placeholder until we can load the full model
-        translation_map = {
-            "en_to_lu": {
-                "hello": "Mwashibukeni",
-                "good morning": "Ntetamena",
-                "good evening": "Ntetamena",
-                "thank you": "Natotela",
-                "how are you": "Mwashibukeni",
-                "i love you": "Nakeŋi",
-                "yes": "Ee",
-                "no": "Awe",
-                "water": "Maji",
-                "food": "Chakulya",
-                "house": "Nyumba",
-                "family": "Banja",
-                "child": "Mwana",
-                "mother": "Mama",
-                "father": "Tata",
-                "brother": "Mwana wa tata",
-                "sister": "Mwana wa mama",
-                "friend": "Mwenzi",
-                "work": "Kazi",
-                "money": "Ndalama",
-                "time": "Nthawi"
-            },
-            "lu_to_en": {
-                "mwashibukeni": "hello",
-                "ntetamena": "good morning",
-                "natotela": "thank you",
-                "nakeŋi": "i love you",
-                "ee": "yes",
-                "awe": "no",
-                "maji": "water",
-                "chakulya": "food",
-                "nyumba": "house",
-                "banja": "family",
-                "mwana": "child",
-                "mama": "mother",
-                "tata": "father",
-                "mwenzi": "friend",
-                "kazi": "work",
-                "ndalama": "money",
-                "nthawi": "time"
-            }
-        }
+        # Check cache first (fast lookup)
+        cache_key = f"{request.direction}:{request.text.lower().strip()}"
+        if cache_key in translation_cache:
+            cached_result = translation_cache[cache_key]
+            logger.info(f"Translation from cache: {request.direction} - '{request.text}' -> '{cached_result}'")
+            return TranslationResponse(
+                translation=cached_result,
+                direction=request.direction,
+                input_text=request.text
+            )
         
-        text_lower = request.text.lower().strip()
-        direction_map = translation_map.get(request.direction, {})
-        
-        # Try exact match first
-        if text_lower in direction_map:
-            output_text = direction_map[text_lower]
+        # Prepare input text with direction prefix
+        if request.direction == "en_to_lu":
+            input_text = f"<EN_TO_LU> {request.text}"
         else:
-            # Simple word-by-word translation for unknown phrases
-            words = text_lower.split()
-            translated_words = []
-            for word in words:
-                if word in direction_map:
-                    translated_words.append(direction_map[word])
-                else:
-                    translated_words.append(f"[{word}]")  # Mark untranslated words
-            output_text = " ".join(translated_words)
+            input_text = f"<LU_TO_EN> {request.text}"
+        
+        # Tokenize input (optimized: no padding, dynamic length)
+        inputs = tokenizer(
+            input_text,
+            max_length=64,  # Reduced from 128 for faster processing
+            padding=False,  # No padding needed for single inputs
+            truncation=True,
+            return_tensors='pt'
+        )
+        
+        # Move inputs to device
+        inputs = {k: v.to(device) for k, v in inputs.items()}
+        
+        # Generate translation (optimized for speed)
+        # Using inference_mode() is faster than no_grad() for inference
+        with torch.inference_mode():
+            outputs = model.generate(
+                input_ids=inputs['input_ids'],
+                attention_mask=inputs['attention_mask'],
+                max_length=64,  # Reduced from 128
+                num_beams=1,  # Greedy decoding (faster than beam search)
+                early_stopping=False,  # Not needed for greedy decoding
+                pad_token_id=tokenizer.pad_token_id,
+                eos_token_id=tokenizer.eos_token_id,
+                do_sample=False,  # Deterministic, faster
+                num_return_sequences=1
+            )
+        
+        # Decode output
+        output_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        
+        # Cache the result (with size limit)
+        if len(translation_cache) >= MAX_CACHE_SIZE:
+            # Remove oldest entry (simple FIFO)
+            oldest_key = next(iter(translation_cache))
+            del translation_cache[oldest_key]
+        translation_cache[cache_key] = output_text
         
         # Log to Supabase if available
         if supabase:
@@ -187,7 +194,7 @@ async def translate_text(request: TranslationRequest):
                     "source_text": request.text,
                     "translated_text": output_text,
                     "latency_ms": int((time.time() - start_time) * 1000),
-                    "model_checkpoint": "lightweight-bart-base"
+                    "model_checkpoint": "checkpoint-22500"
                 }).execute()
                 logger.info("Translation logged to Supabase")
             except Exception as e:

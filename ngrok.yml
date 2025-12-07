@@ -1,0 +1,10 @@
+version: "2"
+authtoken: 36WZOaBlAuZ8KIZg3B5Zbw5bam5_4AZnXjD8hdUrU5BTEZ4DW
+tunnels:
+  api:
+    addr: 8001
+    proto: http
+  flutter:
+    addr: 3000
+    proto: http
+

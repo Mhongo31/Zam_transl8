@@ -32,7 +32,9 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+# /build/  # Commented out to allow zam_trans_app/build/web for Vercel deployment
+zam_trans_app/build/web/**
+!zam_trans_app/build/web/
 
 # OS
 Thumbs.db

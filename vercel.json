@@ -1,17 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "build/web/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/build/web/$1"
-    }
-  ],
+  "buildCommand": "cd zam_trans_app && flutter build web --release",
+  "outputDirectory": "zam_trans_app/build/web",
+  "installCommand": "cd zam_trans_app && flutter pub get",
+  "framework": null,
   "headers": [
     {
       "source": "/(.*)",
@@ -27,4 +19,4 @@
       ]
     }
   ]
-
+}

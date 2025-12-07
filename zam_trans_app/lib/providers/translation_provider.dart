@@ -68,7 +68,8 @@ class TranslationProvider with ChangeNotifier {
       }
 
       // Use the correct API endpoint
-      const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8001');
+      // For local development, use localhost. For production, use the ngrok URL
+      const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'https://examiningly-stealthy-elijah.ngrok-free.dev');
       final String endpoint = '$baseUrl/translate';
 
       print('Sending request to BART API: text="$text", direction="$direction"');
