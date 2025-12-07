@@ -1,17 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "build/web/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/build/web/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -25,6 +13,12 @@
           "value": "same-origin"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
     }
   ]
 }
