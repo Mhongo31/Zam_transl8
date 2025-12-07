@@ -1,0 +1,9 @@
+api.py
+requirements.txt
+Procfile
+checkpoints/
+data/
+train_bart.py
+*.py
+!zam_trans_app/**/*.py
+

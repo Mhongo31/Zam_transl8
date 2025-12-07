@@ -1,5 +1,9 @@
 {
   "version": 2,
+  "buildCommand": "",
+  "installCommand": "",
+  "outputDirectory": "build/web",
+  "framework": null,
   "headers": [
     {
       "source": "/(.*)",
