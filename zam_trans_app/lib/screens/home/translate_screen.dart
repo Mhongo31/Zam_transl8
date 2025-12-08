@@ -210,22 +210,28 @@ class _TranslateScreenState extends State<TranslateScreen> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: TextField(
-                          controller: _inputController,
-                          maxLines: null,
-                          expands: true,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter text to translate...',
-                            hintStyle: TextStyle(color: Colors.grey),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(16),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
+                        child: Container(
+                          color: Colors.white,
+                          child: TextField(
+                            controller: _inputController,
+                            maxLines: null,
+                            expands: true,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter text to translate...',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              contentPadding: EdgeInsets.all(16),
+                              filled: true,
+                              fillColor: Colors.white,
+                            ),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            cursorColor: Colors.black,
                           ),
                         ),
                       ),
@@ -303,23 +309,28 @@ class _TranslateScreenState extends State<TranslateScreen> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: TextField(
-                          controller: _outputController,
-                          maxLines: null,
-                          expands: true,
-                          readOnly: true,
-                          decoration: const InputDecoration(
-                            hintText: 'Translation will appear here...',
-                            hintStyle: TextStyle(color: Colors.grey),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(16),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
+                        child: Container(
+                          color: Colors.white,
+                          child: TextField(
+                            controller: _outputController,
+                            maxLines: null,
+                            expands: true,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                              hintText: 'Translation will appear here...',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              contentPadding: EdgeInsets.all(16),
+                              filled: true,
+                              fillColor: Colors.white,
+                            ),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
                         ),
                       ),
