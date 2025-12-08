@@ -8,16 +8,19 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     primarySwatch: Colors.green,
     primaryColor: primaryColor,
-    colorScheme: const ColorScheme.light(
+    useMaterial3: false,
+    colorScheme: ColorScheme.light(
       primary: primaryColor,
       secondary: secondaryColor,
       surface: Colors.white,
-      background: Color(0xFFF5F5F5),
+      onPrimary: Colors.white,
+      onSurface: Colors.black87,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: primaryColor,
       foregroundColor: Colors.white,
       elevation: 0,
+      iconTheme: IconThemeData(color: Colors.white),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -43,7 +46,6 @@ class AppTheme {
       primary: primaryColor,
       secondary: secondaryColor,
       surface: Color(0xFF1E1E1E),
-      background: Color(0xFF121212),
     ),
   );
 }

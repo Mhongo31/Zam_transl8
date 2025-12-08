@@ -105,10 +105,13 @@ class _TranslateScreenState extends State<TranslateScreen> {
       appBar: AppBar(
         title: const Text('Translate'),
         elevation: 0,
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
       ),
+      resizeToAvoidBottomInset: true,
       body: Consumer<TranslationProvider>(
         builder: (context, translationProvider, child) {
-          return Padding(
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
@@ -177,71 +180,70 @@ class _TranslateScreenState extends State<TranslateScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _inputController,
-                            maxLines: null,
-                            expands: true,
-                            decoration: const InputDecoration(
-                              hintText: 'Enter text to translate...',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16),
-                            ),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                            ),
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[300]!),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _inputController,
+                          maxLines: null,
+                          expands: true,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter text to translate...',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(16),
+                          ),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(12),
-                              bottomRight: Radius.circular(12),
-                            ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(12),
+                            bottomRight: Radius.circular(12),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      // Voice input functionality
-                                    },
-                                    icon: const Icon(Icons.mic),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      _inputController.clear();
-                                      _outputController.clear();
-                                    },
-                                    icon: const Icon(Icons.clear),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                '${_inputController.text.length}/500',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    // Voice input functionality
+                                  },
+                                  icon: const Icon(Icons.mic),
                                 ),
+                                IconButton(
+                                  onPressed: () {
+                                    _inputController.clear();
+                                    _outputController.clear();
+                                  },
+                                  icon: const Icon(Icons.clear),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '${_inputController.text.length}/500',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -266,65 +268,64 @@ class _TranslateScreenState extends State<TranslateScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.grey[50],
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _outputController,
-                            maxLines: null,
-                            expands: true,
-                            readOnly: true,
-                            decoration: const InputDecoration(
-                              hintText: 'Translation will appear here...',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16),
-                            ),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                            ),
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[300]!),
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.grey[50],
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _outputController,
+                          maxLines: null,
+                          expands: true,
+                          readOnly: true,
+                          decoration: const InputDecoration(
+                            hintText: 'Translation will appear here...',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(16),
+                          ),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
                           ),
                         ),
-                        if (_outputController.text.isNotEmpty)
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(12),
-                                bottomRight: Radius.circular(12),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Clipboard.setData(ClipboardData(text: _outputController.text));
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Copied to clipboard')),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.copy),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    // Text-to-speech functionality
-                                  },
-                                  icon: const Icon(Icons.volume_up),
-                                ),
-                              ],
+                      ),
+                      if (_outputController.text.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(12),
+                              bottomRight: Radius.circular(12),
                             ),
                           ),
-                      ],
-                    ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Clipboard.setData(ClipboardData(text: _outputController.text));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Copied to clipboard')),
+                                  );
+                                },
+                                icon: const Icon(Icons.copy),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  // Text-to-speech functionality
+                                },
+                                icon: const Icon(Icons.volume_up),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
@@ -350,7 +351,7 @@ class LanguageSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      height: MediaQuery.of(context).size.height * 0.6, // Limit height to 60% of screen
+      height: MediaQuery.of(context).size.height * 0.6,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
