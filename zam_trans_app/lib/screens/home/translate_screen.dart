@@ -44,6 +44,10 @@ class _TranslateScreenState extends State<TranslateScreen> {
             translationProvider.setTargetLanguage(language);
           }
           Navigator.pop(context);
+          // Force UI rebuild to show selected language
+          if (mounted) {
+            setState(() {});
+          }
         },
       ),
     );
@@ -103,14 +107,22 @@ class _TranslateScreenState extends State<TranslateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Translate'),
+        title: const Text(
+          'Transl8',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       resizeToAvoidBottomInset: true,
       body: Consumer<TranslationProvider>(
         builder: (context, translationProvider, child) {
+          // Force rebuild when languages change
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -135,7 +147,11 @@ class _TranslateScreenState extends State<TranslateScreen> {
                             ),
                             child: Text(
                               translationProvider.sourceLanguage.name,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -170,7 +186,11 @@ class _TranslateScreenState extends State<TranslateScreen> {
                             ),
                             child: Text(
                               translationProvider.targetLanguage.name,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
