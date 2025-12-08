@@ -195,7 +195,10 @@ class _TranslateScreenState extends State<TranslateScreen> {
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.all(16),
                             ),
-                            style: const TextStyle(fontSize: 16),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
                         Container(
@@ -247,13 +250,18 @@ class _TranslateScreenState extends State<TranslateScreen> {
                   child: ElevatedButton(
                     onPressed: translationProvider.isTranslating ? null : _translate,
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: translationProvider.isTranslating
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
                             'Translate',
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                   ),
                 ),
@@ -278,7 +286,10 @@ class _TranslateScreenState extends State<TranslateScreen> {
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.all(16),
                             ),
-                            style: const TextStyle(fontSize: 16),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
                         if (_outputController.text.isNotEmpty)
