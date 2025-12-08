@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/translation_provider.dart';
@@ -8,6 +9,12 @@ import 'screens/splash_screen.dart';
 import 'utils/app_theme.dart';
 
 void main() {
+  // Force English locale to prevent Chinese text
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(const ZambianTranslatorApp());
 }
 
@@ -29,6 +36,11 @@ class ZambianTranslatorApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         home: const SplashScreen(),
         debugShowCheckedModeBanner: false,
+        // Force English locale to prevent Chinese text
+        locale: const Locale('en', 'US'),
+        supportedLocales: const [
+          Locale('en', 'US'), // English
+        ],
       ),
     );
   }
