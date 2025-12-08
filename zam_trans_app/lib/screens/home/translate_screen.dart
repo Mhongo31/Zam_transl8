@@ -203,6 +203,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
+                    color: Colors.white,
                     border: Border.all(color: Colors.grey[300]!),
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -215,12 +216,16 @@ class _TranslateScreenState extends State<TranslateScreen> {
                           expands: true,
                           decoration: const InputDecoration(
                             hintText: 'Enter text to translate...',
+                            hintStyle: TextStyle(color: Colors.grey),
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.all(16),
+                            filled: true,
+                            fillColor: Colors.white,
                           ),
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.black87,
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ),
@@ -291,9 +296,9 @@ class _TranslateScreenState extends State<TranslateScreen> {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
+                    color: Colors.white,
                     border: Border.all(color: Colors.grey[300]!),
                     borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey[50],
                   ),
                   child: Column(
                     children: [
@@ -305,12 +310,16 @@ class _TranslateScreenState extends State<TranslateScreen> {
                           readOnly: true,
                           decoration: const InputDecoration(
                             hintText: 'Translation will appear here...',
+                            hintStyle: TextStyle(color: Colors.grey),
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.all(16),
+                            filled: true,
+                            fillColor: Colors.white,
                           ),
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.black87,
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ),
